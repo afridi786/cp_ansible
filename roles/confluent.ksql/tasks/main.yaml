@@ -1,0 +1,28 @@
+---
+# Install Packages
+- name: Install the KSQL Packages
+  yum:
+    name:"{{item}}{{confluent_package_redhat_suffix}}"
+    state: present
+    loop: "{{ksql_packages}}"
+  when: ansible_os_family == "RedHat"
+
+# Configure environment
+- name: Create Ksql Group
+  group:
+    name: "{{ksql_group}}"
+
+- name: Create Ksql User
+  user:
+    name: "{{ksql_user}}"
+    comment: "Connect Distributed User"
+    system: true
+    group: "{{ksql_group}}"
+
+- name: Set Ksql streams dir permissions
+  file:
+    path: "{{ksql.properties['ksql.streams.state.dir']}}"
+    owner: "{{ksql_user}}"
+    group: "{{ksql_group}}"
+    state: directory
+    mode: 0755
