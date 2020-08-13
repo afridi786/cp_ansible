@@ -1,0 +1,52 @@
+---
+all:
+ children:
+  zookeeper:
+    hosts:
+      172.31.35.152:
+    vars:
+      ansible_connection: ssh
+      ansible_become: true
+      confluent_server_enabled: false
+      zookeeper_user: custom-user
+      zookeeper_group: custom-group
+  kafka_broker:
+    hosts:
+      172.31.35.152:
+    vars:
+      ansible_connection: ssh
+      ansible_become: true
+      confluent_server_enabled: false
+      kafka_broker_user: custom-user
+      kafka_broker_group: custom-group
+      kafka_broker:
+       datadir:
+         - /var/lib/kafka/my-data
+  schema_registry:
+    hosts:
+      172.31.35.152:
+    vars:
+      ansible_connection: ssh
+      ansible_become: true
+      confluent_server_enabled: false
+      schema_registry_user: custom-user
+      schema_registry_group: custom-group
+  kafka_rest:
+    hosts:
+      172.31.35.152:
+    vars:
+      ansible_connection: ssh
+      ansible_become: true
+      confluent_server_enabled: false
+      kafka_rest_user: custom-user
+      kafka_rest_group: custom-group
+  control_center:
+    hosts:
+      172.31.35.152:
+    vars:
+      ansible_connection: ssh
+      ansible_become: true
+      confluent_server_enabled: false
+      control_center_user: custom-user
+      control_center_group: custom-group
+
