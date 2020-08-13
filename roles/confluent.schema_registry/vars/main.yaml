@@ -1,0 +1,32 @@
+---
+confluent_repo_version: 5.5
+confluent_package_version: 5.5.1
+confluent_full_package_version: "{{ confluent_package_version + '-1' }}"
+confluent_package_redhat_suffix: "{{ '-' + confluent_full_package_version if confluent_full_package_version != '' else ''}}"
+confluent_package_debian_suffix: "{{ '=' + confluent_full_package_version if confluent_full_package_version != '' else ''}}"
+
+kafka_broker_main_package: confluent-kafka-2.12
+schema_registry_service_name: confluent-schema-registry
+schema_registry_packages:
+  - confluent-common
+  - confluent-rest-utils
+  - confluent-metadata-service
+  - "{{ kafka_broker_main_package }}"
+  - confluent-schema-registry
+  - confluent-security
+schema_registry_default_user: cp-schema-registry
+schema_registry_default_group: confluent
+schema_registry:
+  config_file: /etc/schema-registry/schema-registry.properties
+  systemd_file: /usr/lib/systemd/system/{{schema_registry_service_name}}.service
+  systemd_override: /etc/systemd/system/{{schema_registry_service_name}}.service.d/override.conf	
+
+schema_registry:
+  appender_log_path: /var/log/confluent/schema-registry/
+  appender_log_name: schema-registry.log
+  appender_max_log_files: 10
+  appender_log_file_size: 100MB
+  properties:
+    debug: false
+    schema.registry.group.id: schema-registry
+    kafkastore.topic: _schemas

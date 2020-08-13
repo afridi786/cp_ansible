@@ -1,0 +1,37 @@
+---
+# Install Packages
+- name: Install the Control Center Packages
+  yum:
+    name: "{{item}}{{confluent_package_redhat_suffix}}"
+    state: latest
+  loop: "{{control_center_packages}}"
+  when: ansible_os_family == "RedHat"
+
+# Configure environment
+- name: Create Control Center Group
+  group:
+    name: "{{control_center_group}}"
+
+- name: Create Control Center User
+  user:
+    name: "{{control_center_user}}"
+    comment: "Control Center User"
+    system: true
+    group: "{{control_center_group}}"
+
+- name: Set Control Center Data Dir permissions
+  file:
+    path: "{{control_center.properties['confluent.controlcenter.data.dir']}}"
+    owner: "{{control_center_user}}"
+    group: "{{control_center_group}}"
+    state: directory
+    mode: 0755
+
+- name: Set Control Center Data Dir file permissions
+  file:
+    path: "{{control_center.properties['confluent.controlcenter.data.dir']}}"
+    owner: "{{control_center_user}}"
+    group: "{{control_center_group}}"
+    recurse: true
+
+
